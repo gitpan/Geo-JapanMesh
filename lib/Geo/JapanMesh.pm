@@ -4,15 +4,17 @@ use warnings;
 use strict;
 use Carp;
 
-use version; our $VERSION = qv('0.0.1');
+use version; our $VERSION = qv('0.0.2');
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 use Exporter;
 @ISA = qw(Exporter);
 @EXPORT      = qw(latlng2japanmesh japanmesh2latlng japanmesh2rect);
-@EXPORT_OK   = qw(latlng2iareamesh iareamesh2latlng iareamesh2rect);
+@EXPORT_OK   = qw(
+    latlng2iareamesh iareamesh2latlng iareamesh2rect
+);
 %EXPORT_TAGS = (
     iareamesh => [qw(latlng2iareamesh iareamesh2latlng iareamesh2rect)], 
-    japanmesh => [qw(latlng2japanmesh japanmesh2latlng japanmesh2rect)]
+    japanmesh => [qw(latlng2japanmesh japanmesh2latlng japanmesh2rect)],
 );
 
 # Export function for JapanMesh
@@ -61,7 +63,7 @@ sub latlng2iareamesh {
 
     return _latlng2japanmesh( $slat, $slng, $num ) if ( $num < 3 );
 
-    my ( $ret, $a, $b ) = _latlng2japanmesh( $slat, $slng, -1 );
+    my ( $ret, $a, $b ) = _latlng2japanmesh( $slat, $slng, -2 );
     $ret =~ s/\-//g;
     return _latlng2iareamesh( $ret, $a, $b, $num - 2, 1 );
 }
@@ -111,19 +113,26 @@ sub _latlng2japanmesh {
     return $ret if ( $num == 1 );
 
     my $q = int( $a / 300000 );
-    my $b = $a - $q * 300000;
     my $t = int( $c / 450000 );
-    my $d = $c - $t * 450000;
 
     $ret .= "-$q$t";
     return $ret           if ( $num == 2 );
-    return ($ret, $b, $d) if ( $num == -1 );
+
+    my $b = $a - $q * 300000;
+    my $d = $c - $t * 450000;
+
+    return ($ret, $b, $d) if ( $num == -2 );
 
     my $r = int( $b / 30000 );
     my $u = int( $d / 45000 );
 
     $ret .= "-$r$u";
-    return $ret;
+    return $ret           if ( $num == 3 );
+
+    my $e = $b - $r * 30000;
+    my $f = $d - $u * 45000;
+
+    return ($ret, $e, $f) if ( $num == -3 );
 }
 
 sub _japanmesh2rect {

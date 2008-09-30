@@ -1,6 +1,6 @@
 ---
 name: Geo-JapanMesh
-version: 0.0.1
+version: 0.0.2
 author:
   - 'OHTSUKA Ko-hei <nene@kokogiko.net>'
 abstract: Convert between latitude/longitude and Japanese geographical mesh code
@@ -14,7 +14,7 @@ requires:
 provides:
   Geo::JapanMesh:
     file: lib/Geo/JapanMesh.pm
-    version: 0.0.1
+    version: 0.0.2
 generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
